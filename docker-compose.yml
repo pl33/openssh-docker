@@ -1,0 +1,20 @@
+version: "3"
+services:
+  openssh-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openssh-server
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - USER_NAME
+      - USER_PASS
+      - SSH_PORT
+    volumes:
+      - $HOST_CONFIG_DIR:/config:ro
+      - $HOST_DATA_DIR:/data
+    ports:
+      - $SSH_PORT:22
+    restart: unless-stopped
