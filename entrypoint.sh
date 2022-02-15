@@ -46,6 +46,7 @@ function prep_user() {
     useradd -u $PUID -N -g $USER_NAME -G users -d /data -s /bin/bash $USER_NAME
     echo -e "$USER_PASS\n$USER_PASS" | passwd $USER_NAME
     chown $USER_NAME:$USER_NAME /data
+    chown $USER_NAME:$USER_NAME /config/authorized_keys
 }
 
 if [ "$1" == "help" ]; then
@@ -63,6 +64,7 @@ elif [ "$1" == "keygen" ]; then
     ssh-keygen -t ed25519  -N "" -q -f /config/ssh_host_ed25519_key
 elif [ "$1" == "base_config" ]; then
     prep_tz
+    chown 0:0 /config
     cp /etc/ssh/sshd_config /config/sshd_config
     sed -i '/^PasswordAuthentication/c\PasswordAuthentication no' /config/sshd_config
     sed -i '/^#HostKey \/etc\/ssh\/ssh_host_rsa_key/c\HostKey \/config\/ssh_host_rsa_key' /config/sshd_config
